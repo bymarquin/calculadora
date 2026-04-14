@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora de Média</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      .grade-input {
+        width: 80px;
+        border: 1px solid #cbd5e1; /* slate-300 */
+        border-radius: 6px;
+        padding: 0.5rem;
+        background: #ffffff;
+        color: #0f172a; /* slate-900 */
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        transition: all 0.2s ease;
+      }
+
+      .grade-input:focus {
+        outline: none;
+        border-color: #3b82f6; /* blue-500 */
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+      }
+
+      /* Ocultar as setinhas (spinners) dos inputs numéricos para visual mais limpo */
+      .grade-input::-webkit-outer-spin-button,
+      .grade-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      .grade-input[type=number] {
+        -moz-appearance: textfield;
+      }
+
+      .result-number {
+        font-variant-numeric: tabular-nums;
+      }
+
+      @media (min-width: 640px) {
+        .grade-input {
+          width: 90px;
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-slate-50 text-slate-800 antialiased flex flex-col items-center py-10 px-4">
+    <main class="w-full max-w-3xl bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-10">
+      <header class="mb-8 border-b border-slate-100 pb-6">
+        <h1 class="text-2xl sm:text-3xl font-semibold text-slate-900 tracking-tight mb-2">Avaliação de Desempenho</h1>
+        <p class="text-sm text-slate-500">Preencha suas notas abaixo para calcular a média final em tempo real.</p>
+      </header>
+
+      <div class="overflow-x-auto mb-8">
+        <table class="w-full border-collapse text-left text-sm sm:text-base">
+          <thead>
+            <tr class="bg-slate-50/50">
+              <th class="border-y border-slate-200 py-3 px-4 font-semibold text-slate-600 text-xs uppercase tracking-wider">Tipo de Avaliação</th>
+              <th class="border-y border-slate-200 py-3 px-4 font-semibold text-slate-600 text-xs uppercase tracking-wider text-center">Pontuação</th>
+              <th class="border-y border-slate-200 py-3 px-4 font-semibold text-slate-600 text-xs uppercase tracking-wider text-center">Peso</th>
+              <th class="border-y border-slate-200 py-3 px-4 font-semibold text-slate-600 text-xs uppercase tracking-wider text-center">Nota Obtida</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <tr class="hover:bg-slate-50/50 transition-colors">
+              <td class="py-4 px-4 font-medium text-slate-700">AVP1</td>
+              <td class="py-4 px-4 text-center text-slate-500">0 a 10</td>
+              <td class="py-4 px-4 text-center text-slate-500">2</td>
+              <td class="py-4 px-4 flex justify-center">
+                <input id="avp1" class="grade-input" type="number" min="0" max="10" step="0.1" value="0" />
+              </td>
+            </tr>
+            <tr class="hover:bg-slate-50/50 transition-colors">
+              <td class="py-4 px-4 font-medium text-slate-700">AVP2</td>
+              <td class="py-4 px-4 text-center text-slate-500">0 a 10</td>
+              <td class="py-4 px-4 text-center text-slate-500">2</td>
+              <td class="py-4 px-4 flex justify-center">
+                <input id="avp2" class="grade-input" type="number" min="0" max="10" step="0.1" value="0" />
+              </td>
+            </tr>
+            <tr class="hover:bg-slate-50/50 transition-colors">
+              <td class="py-4 px-4 font-medium text-slate-700">
+                TDEs
+                <span class="block text-xs text-slate-400 font-normal mt-0.5">Soma das 4 atividades</span>
+              </td>
+              <td class="py-4 px-4 text-center text-slate-500">0 a 10</td>
+              <td class="py-4 px-4 text-center text-slate-500">1</td>
+              <td class="py-4 px-4">
+                <div class="flex flex-wrap items-center justify-center gap-2 max-w-[200px] mx-auto">
+                  <input id="tde1" class="grade-input" type="number" min="0" max="10" step="0.1" value="0" placeholder="TDE1" title="TDE 1" />
+                  <input id="tde2" class="grade-input" type="number" min="0" max="10" step="0.1" value="0" placeholder="TDE2" title="TDE 2" />
+                  <input id="tde3" class="grade-input" type="number" min="0" max="10" step="0.1" value="0" placeholder="TDE3" title="TDE 3" />
+                  <input id="tde4" class="grade-input" type="number" min="0" max="10" step="0.1" value="0" placeholder="TDE4" title="TDE 4" />
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 items-start">
+        <section class="text-sm text-slate-500 space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-100">
+          <h3 class="font-semibold text-slate-700 mb-3 text-xs uppercase tracking-wider">Fórmula de Cálculo</h3>
+          <p><strong class="font-medium text-slate-700">Média</strong> = ((2 × AVP1) + (2 × AVP2) + TDEs) / 5</p>
+          <p><strong class="font-medium text-slate-700">TDEs</strong> = (TDE1 + TDE2 + TDE3 + TDE4) / 4</p>
+          <p class="pt-2 text-xs">As notas individuais são automaticamente limitadas ao intervalo de 0 a 10.</p>
+        </section>
+
+        <section class="bg-blue-50/50 border border-blue-100 rounded-xl p-5 md:p-6">
+          <div class="flex items-center justify-between gap-4 mb-4">
+            <span class="text-slate-600 font-medium">Média dos TDEs</span>
+            <span id="tdes" class="result-number text-lg font-semibold text-slate-700">0.00</span>
+          </div>
+          <div class="flex items-center justify-between gap-4 border-t border-blue-200/60 pt-4">
+            <span class="text-slate-900 font-semibold text-lg">Média Final</span>
+            <span id="media" class="result-number text-2xl font-bold text-blue-600">0.00</span>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      const ids = ["avp1", "avp2", "tde1", "tde2", "tde3", "tde4"];
+      const fields = ids.map((id) => document.getElementById(id));
+
+      function clamp(note) {
+        if (Number.isNaN(note)) return 0;
+        return Math.min(10, Math.max(0, note));
+      }
+
+      function getValue(id) {
+        const el = document.getElementById(id);
+        const value = clamp(parseFloat(el.value));
+        if (value !== parseFloat(el.value)) el.value = value;
+        return value;
+      }
+
+      function calc() {
+        const avp1 = getValue("avp1");
+        const avp2 = getValue("avp2");
+        const tde1 = getValue("tde1");
+        const tde2 = getValue("tde2");
+        const tde3 = getValue("tde3");
+        const tde4 = getValue("tde4");
+
+        const tdes = (tde1 + tde2 + tde3 + tde4) / 4;
+        const media = ((2 * avp1) + (2 * avp2) + tdes) / 5;
+
+        document.getElementById("tdes").textContent = tdes.toFixed(2);
+        
+        const mediaEl = document.getElementById("media");
+        mediaEl.textContent = media.toFixed(2);
+
+        // Feedback visual de segurança: se a média for >= 6 (ou 7), pode ficar verde/azul, se menor que nota de corte, vermelho (Opcional, mantive azul para padrão)
+        if (media >= 7) {
+            mediaEl.className = "result-number text-2xl font-bold text-emerald-600";
+        } else if (media >= 5) {
+            mediaEl.className = "result-number text-2xl font-bold text-blue-600";
+        } else {
+            mediaEl.className = "result-number text-2xl font-bold text-slate-700";
+        }
+      }
+
+      fields.forEach((field) => {
+          field.addEventListener("input", calc);
+          // Auto-select text on focus para facilitar digitação
+          field.addEventListener("focus", function() { this.select(); });
+      });
+      calc();
+    </script>
+  </body>
+</html>
