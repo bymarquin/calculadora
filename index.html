@@ -131,16 +131,32 @@
       const ids = ["avp1", "avp2", "tde1", "tde2", "tde3", "tde4"];
       const fields = ids.map((id) => document.getElementById(id));
 
-      function clamp(note) {
-        if (Number.isNaN(note)) return 0;
-        return Math.min(10, Math.max(0, note));
-      }
-
       function getValue(id) {
         const el = document.getElementById(id);
-        const value = clamp(parseFloat(el.value));
-        if (value !== parseFloat(el.value)) el.value = value;
-        return value;
+        let rawVal = el.value;
+
+        // Se estiver vazio, consideramos 0 para o cálculo, mas não forçamos "0" na tela ainda
+        if (rawVal === "") return 0;
+
+        // Limpa zeros à esquerda (ex: "05" vira "5"), mas preserva "0." (ex: "0.5")
+        if (rawVal.length > 1 && rawVal.startsWith("0") && rawVal[1] !== ".") {
+          rawVal = rawVal.replace(/^0+/, "");
+          el.value = rawVal;
+        }
+
+        const parsed = parseFloat(rawVal);
+        if (Number.isNaN(parsed)) return 0;
+
+        // Limita entre 0 e 10
+        if (parsed > 10) {
+          el.value = "10";
+          return 10;
+        } else if (parsed < 0) {
+          el.value = "0";
+          return 0;
+        }
+
+        return parsed;
       }
 
       function calc() {
@@ -159,7 +175,6 @@
         const mediaEl = document.getElementById("media");
         mediaEl.textContent = media.toFixed(2);
 
-        // Feedback visual de segurança: se a média for >= 6 (ou 7), pode ficar verde/azul, se menor que nota de corte, vermelho (Opcional, mantive azul para padrão)
         if (media >= 7) {
             mediaEl.className = "result-number text-2xl font-bold text-emerald-600";
         } else if (media >= 5) {
@@ -171,8 +186,17 @@
 
       fields.forEach((field) => {
           field.addEventListener("input", calc);
-          // Auto-select text on focus para facilitar digitação
-          field.addEventListener("focus", function() { this.select(); });
+          
+          // Esvazia o campo se for 0 ao focar (facilita a digitação sem precisar apagar)
+          field.addEventListener("focus", function() {
+            if (this.value === "0") this.value = "";
+          });
+          
+          // Volta para 0 se o usuário sair do campo deixando-o vazio
+          field.addEventListener("blur", function() {
+            if (this.value === "") this.value = "0";
+            calc();
+          });
       });
       calc();
     </script>
